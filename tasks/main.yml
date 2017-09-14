@@ -1,0 +1,29 @@
+---
+- name: add gcloud sdk key into apt
+  apt_key:
+    url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+    state: present
+  when: not ansible_check_mode
+  tags:
+  - gcloud
+
+- name: add apt repository
+  apt_repository:
+    repo: "deb https://packages.cloud.google.com/apt cloud-sdk-{{ ansible_distribution_release }} main"
+    state: present
+  register: gcloud_repo_added
+  tags:
+  - gcloud
+
+- name: apt update cache
+  apt:
+    update_cache: yes
+  when: gcloud_repo_added.changed
+  tags:
+  - gcloud
+
+- name: install gcloud sdk
+  apt:
+    pkg: "google-cloud-sdk"
+  tags:
+  - gcloud
