@@ -27,3 +27,8 @@
     pkg: "google-cloud-sdk"
   tags:
   - gcloud
+
+- include: credentials.yml
+  when: gcloud_project_id is defined
+  tags:
+  - gcloud
